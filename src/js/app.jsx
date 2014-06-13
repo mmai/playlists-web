@@ -28,11 +28,14 @@ var SongsStore = Fluxxor.createStore({
       var lastfm = require('playlists-lastfm');
       var youtube = require('playlists-youtube');
       var soundcloud = require('playlists-soundcloud');
+      window.youtube_callbacks ={};
+      window.soundcloud_callbacks ={};
+      window.lastfm_callbacks ={};
 
-      var mylastfm = playlists.makeMusicService(lastfm, {key: '1e049e903004205189901533570d81b1', user: payload.user});
+      var mylastfm = playlists.makeMusicService(lastfm, {key: '1e049e903004205189901533570d81b1', callbacks_store_name: 'lastfm_callbacks', user: payload.user});
       var musicServices = [
-          playlists.makeMusicService(youtube, {key: 'AIzaSyB1OG8q7t-tuVYfL6qVw9GZ-cvjO56X2j0'}),
-          playlists.makeMusicService(soundcloud, {key: 'TiNg2DRYhBnp01DA3zNag'})
+          playlists.makeMusicService(youtube, {key: 'AIzaSyB1OG8q7t-tuVYfL6qVw9GZ-cvjO56X2j0', callbacks_store_name: 'youtube_callbacks'}),
+          playlists.makeMusicService(soundcloud, {key: 'TiNg2DRYhBnp01DA3zNag', callbacks_store_name: 'soundcloud_callbacks'})
       ];
 
       mylastfm.getLovedTracks().then(function(lastfm_loved_tracks){
@@ -46,6 +49,7 @@ var SongsStore = Fluxxor.createStore({
                   searchOnService(musicServices[i], lovedPlaylist);
               }
           })
+//      .end();
       .catch(function (error){
               console.log(error.message);
           });
