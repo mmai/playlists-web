@@ -1,0 +1,55 @@
+$footer_height: 50px;
+
+html, body {
+    height:100%;
+
+    #wrap {
+        min-height: 100%;
+        height: auto !important;
+        margin-bottom: -$footer_height;
+    }
+
+    #main {
+        overflow:auto;
+        padding-bottom: $footer_height + 50px;
+    }
+
+    footer {
+        height: $footer_height;
+        .chrome-extension {
+//            display: inline-block;
+            float: right;
+            font-weight: bold;
+        } 
+    }
+}
+
+section {
+    h2, h3 {
+        margin-top: 0px;
+        line-height: 0.6;
+    }
+}
+
+nav, .alert {
+    a {
+        cursor: pointer;
+    }
+}
+
+// bootswatch theme overrides
+
+.btn {
+    padding: 8px 12px;
+}
+
+.btn-toolbar {
+    .btn, .btn-group, .input-group {
+        margin-left: 0px;
+    }
+}
+
+.glyphicon {
+  font-family: 'Glyphicons Halflings' !important;
+}
+

@@ -2,6 +2,7 @@
 
 var React = require("react");
 var Fluxxor = require("fluxxor");
+var LaddaButton = require("react-ladda");
 var _ = require("lodash");
 
 window.React = React;
@@ -12,7 +13,8 @@ var SongsStore = Fluxxor.createStore({
   },
 
   initialize: function() {
-    this.songs = [];
+      this.fetchingLastfmLovedTracks = false;
+      this.songs = [];
   },
 
   getSong: function(songId) {
@@ -31,6 +33,7 @@ var SongsStore = Fluxxor.createStore({
       window.youtube_callbacks ={};
       window.soundcloud_callbacks ={};
       window.lastfm_callbacks ={};
+      that.user = null;
 
       var mylastfm = playlists.makeMusicService(lastfm, {key: '1e049e903004205189901533570d81b1', callbacks_store_name: 'lastfm_callbacks', user: payload.user});
       var musicServices = [
@@ -38,10 +41,14 @@ var SongsStore = Fluxxor.createStore({
           playlists.makeMusicService(soundcloud, {key: 'TiNg2DRYhBnp01DA3zNag', callbacks_store_name: 'soundcloud_callbacks'})
       ];
 
+      that.fetchingLastfmLovedTracks = true;
+      that.emit("change");
       mylastfm.getLovedTracks().then(function(lastfm_loved_tracks){
               //Show found playlist
               var lovedPlaylist = new playlists.Playlist(lastfm_loved_tracks);
               that.songs = lovedPlaylist.songs;
+              that.user = payload.user;
+              that.fetchingLastfmLovedTracks = false;
               that.emit("change");
 
               //Search songs on services
@@ -52,6 +59,8 @@ var SongsStore = Fluxxor.createStore({
 //      .end();
       .catch(function (error){
               console.log(error.message);
+              that.fetchingLastfmLovedTracks = false;
+              that.emit("change");
           });
 
       function searchOnService(service, playlist){
@@ -67,7 +76,9 @@ var SongsStore = Fluxxor.createStore({
 
   getState: function() {
     return {
-      songs: this.songs
+        fetchingLastfmLovedTracks: this.fetchingLastfmLovedTracks,
+        songs: this.songs,
+        user: this.user
     };
   }
 });
@@ -103,17 +114,26 @@ var Application = React.createClass({
 
   render: function() {
     return (
-      <div className="container">
-        <form onSubmit={this.onSubmitForm}>
-          <input ref="input" type="text" size="30" placeholder="LastFM user name" />
-          <input type="submit" value="Search loved tracks" />
-        </form>
-        <table className="table">
-          {this.state.songs.map(function(song, i) {
-            return <SongsItem song={song} key={i} />;
-          })}
-        </table>
-      </div>
+        <div>
+            <form onSubmit={this.onSubmitForm} className="form-horizontal">
+            <div className="input-group">
+            <input ref="input" type="text" className="form-control" placeholder="LastFM user name" />
+                <span className="input-group-btn">
+                <LaddaButton active={this.getStateFromFlux().fetchingLastfmLovedTracks} color="blue" style="expand-right">
+                    <button type="submit" className="btn btn-default" id="btnSaveNewInterest">Search loved tracks</button>
+                </LaddaButton>
+                </span>
+            </div>
+            </form>
+
+            <SearchResultsTitle user={this.props.user}/>
+
+            <table className="table table-bordered table-condensed table-hover">
+              {this.state.songs.map(function(song, i) {
+                return <SongsItem song={song} key={i} />;
+              })}
+            </table>
+        </div>
     );
   },
 
@@ -125,6 +145,16 @@ var Application = React.createClass({
   },
 
 });
+
+var SearchResultsTitle = React.createClass({
+        render: function(){
+            return this.props.user == null ? <div></div> : (
+            <h3>
+            {this.props.user}'s loved tracks
+            </h3>
+            )
+        }
+    });
 
 var SongsItem = React.createClass({
   mixins: [FluxChildMixin],

@@ -10,13 +10,13 @@
     "playlists-soundcloud": "~0.5.0",
     "playlists-lastfm": "~0.5.0",
     "playlists": "~0.5.0",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "react-ladda": "~0.2.0"
   },
   "devDependencies": {
     "gulp": "^3.5.2",
     "gulp-jshint": "^1.5.0",
-    "gulp-browserify": "^0.4.6",
-    "gulp-concat": "^2.1.7",
+    "gulp-concat": "~2.2.0",
     "gulp-uglify": "^0.2.1",
     "browser-sync": "^0.6.1",
     "gulp-imagemin": "^0.1.5",
@@ -24,6 +24,12 @@
     "gulp-streamify": "0.0.4",
     "browserify": "^3.32.1",
     "reactify": "~0.13.1",
-    "watchify": "~0.10.2"
+    "watchify": "~0.10.2",
+    "gulp-plumber": "~0.6.3",
+    "gulp-ruby-sass": "~0.5.0",
+    "gulp-filesize": "0.0.6",
+    "gulp-autoprefixer": "0.0.7",
+    "gulp-rename": "~1.2.0",
+    "debowerify": "~0.7.1"
   }
 }
