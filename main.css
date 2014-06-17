@@ -1,0 +1,71 @@
+html, body {
+  height: 100%;
+}
+html #wrap, body #wrap {
+  min-height: 100%;
+  height: auto !important;
+  margin-bottom: -50px;
+}
+html #main, body #main {
+  overflow: auto;
+  padding-bottom: 100px;
+}
+html footer, body footer {
+  height: 50px;
+}
+html footer .chrome-extension, body footer .chrome-extension {
+  float: right;
+  font-weight: bold;
+}
+
+section h2, section h3 {
+  margin-top: 0px;
+  line-height: 0.6;
+}
+
+nav a, .alert a {
+  cursor: pointer;
+}
+
+.btn {
+  padding: 8px 12px;
+}
+
+.btn-toolbar .btn, .btn-toolbar .btn-group, .btn-toolbar .input-group {
+  margin-left: 0px;
+}
+
+.glyphicon {
+  font-family: 'Glyphicons Halflings' !important;
+}
+
+.spin {
+  -webkit-animation: spin 1s infinite linear;
+  animation: spin 1s infinite linear;
+  -webkit-transform-origin: 50% 58%;
+  transform-origin: 50% 58%;
+  -ms-transform-origin: 50% 58%;
+  /* IE 9 */
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

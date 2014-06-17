@@ -3,14 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <title>LastFM playlists</title>
-<link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap-readable.css">
+<link rel="stylesheet" href="vendor/ladda/dist/ladda.min.css">
+<link rel="stylesheet" href="main.css">
+<script src="vendor/jquery/dist/jquery.min.js"></script>
 <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 </head>
 <body>
-<h1>LastFM playlists</h1>
-<div>Enter a LastFM user name to search his loved tracks on youtube and Soundcloud.</div>
-<div id="app"></div>
+<header class="container">
+    <h1>LastFM playlists</h1>
+</header>
+<div role="main" id="main">
+    <div class="container">
+        <div>Enter a LastFM user name to search his loved tracks on other music services.</div>
+        <br />
+        <div id="app"></div>
+    </div>
+</div>
+<footer class="container">
+    LastFM playlists &copy; 2014 <a href="http://bourcereau.fr/">Henri Bourcereau</a>        
+</footer>
 <script src="js/bundle.js"></script>
 </body>
 </html>
