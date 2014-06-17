@@ -28,7 +28,12 @@ var Application = React.createClass({
       window.youtube_callbacks ={};
       window.soundcloud_callbacks ={};
       window.lastfm_callbacks ={};
-      that.setState({user: null});
+      that.setState({
+              user: null,
+              message: null,
+              songs:[],
+              fetchingLastfmLovedTracks: true
+          });
 
       var mylastfm = playlists.makeMusicService(lastfm, {key: '1e049e903004205189901533570d81b1', callbacks_store_name: 'lastfm_callbacks', user: user});
       var musicServices = [
@@ -36,13 +41,14 @@ var Application = React.createClass({
           playlists.makeMusicService(soundcloud, {key: 'TiNg2DRYhBnp01DA3zNag', callbacks_store_name: 'soundcloud_callbacks'})
       ];
 
-      that.setState({fetchingLastfmLovedTracks: true});
       mylastfm.getLovedTracks().then(function(lastfm_loved_tracks){
               //Show found playlist
               var lovedPlaylist = new playlists.Playlist(lastfm_loved_tracks);
-              that.setState({songs: lovedPlaylist.songs});
-              that.setState({user: user.songs});
-              that.setState({fetchingLastfmLovedTracks: false});
+              that.setState({
+                      user: user,
+                      songs: lovedPlaylist.songs,
+                      fetchingLastfmLovedTracks: false
+                  });
 
               //Search songs on services
               for (var i = 0, len = musicServices.length;i<len;i++){
@@ -53,6 +59,8 @@ var Application = React.createClass({
       .catch(function (error){
               console.log(error.message);
               that.setState({fetchingLastfmLovedTracks: false});
+              that.setState({user: false});
+              that.setState({message: error.message});
           });
 
       function searchOnService(service, playlist){
@@ -80,12 +88,14 @@ var Application = React.createClass({
             </div>
             </form>
 
-            <SearchResultsTitle user={this.props.user}/>
+            <SearchResultsTitle user={this.state.user} message={this.state.message}/>
 
-            <table className="table table-bordered table-condensed table-hover">
+            <table className="table table-condensed table-hover">
+            <tbody>
               {this.state.songs.map(function(song, i) {
                 return <SongsItem song={song} key={i} />;
               })}
+            </tbody>
             </table>
         </div>
     );
@@ -102,11 +112,14 @@ var Application = React.createClass({
 
 var SearchResultsTitle = React.createClass({
         render: function(){
-            return this.props.user == null ? <div></div> : (
-            <h3>
-            {this.props.user}'s loved tracks
-            </h3>
-            )
+            var message = '';
+            if (this.props.message){
+                message = this.props.message;
+            } 
+            else if (this.props.user != null) {
+                message = this.props.user + "'s loved tracks";
+            }
+            return <h3>{message}</h3>
         }
     });
 
@@ -118,9 +131,9 @@ var SongsItem = React.createClass({
   render: function() {
       return (
           <tr key={this.props.key}>
-            <td>{this.props.song.name}</td>
-            <td><RecordInstance servicename='soundcloud' record={this.props.song.soundcloud}/></td>
+          <td>{this.props.song.name} ({this.props.song.artist})</td>
             <td><RecordInstance servicename='youtube' record={this.props.song.youtube}/></td>
+            <td><RecordInstance servicename='soundcloud' record={this.props.song.soundcloud}/></td>
           </tr>
       );
   },
@@ -129,12 +142,18 @@ var SongsItem = React.createClass({
 
 var RecordInstance = React.createClass({
   render: function(){
-      var playlink = <span></span>;
-      if ((this.props.record !== undefined) && (this.props.record !== false)){
-          var imgSrc = "assets/" + this.props.servicename + ".png";
-          playlink = <a target='_blank' href={this.props.record.url}><img src={imgSrc} /></a>;
+      if (this.props.record === undefined){
+          //Searching
+//          return (<img src='assets/spinner.png' />);
+//          return (<span className="glyphicon glyphicon-refresh"></span>);
+          return (<span className="glyphicon spin glyphicon-refresh"></span>);
       }
-      return playlink;
+      if (this.props.record === false){
+          //Not found
+          //return (<span className="glyphicon glyphicon-remove"></span>);
+          return (<span></span>);
+      }
+      return <a target='_blank' href={this.props.record.url}><img src={'assets/'+this.props.servicename+'.png'} /></a>;
   }
 });
 

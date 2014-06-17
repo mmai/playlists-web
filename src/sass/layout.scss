@@ -53,3 +53,47 @@ nav, .alert {
   font-family: 'Glyphicons Halflings' !important;
 }
 
+@mixin animation($type, $time, $duration, $direction){
+  -webkit-animation: $type $time $duration $direction;
+  -moz-animation: $type $time $duration $direction;
+  -o-animation: $type $time $duration $direction;
+  animation: $type $time $duration $direction;
+}
+
+@mixin transform-origin($left, $right){
+  -webkit-transform-origin: $left $right;
+  transform-origin:$left $right;
+  -ms-transform-origin:$left $right; /* IE 9 */
+}
+
+.spin {
+    @include animation(spin, 1s, infinite, linear);
+    @include transform-origin(50%, 58%);
+}
+
+@-moz-keyframes spin {
+  from {
+    -moz-transform: rotate(0deg);
+  }
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
