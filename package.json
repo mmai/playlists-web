@@ -5,10 +5,7 @@
   "dependencies": {
     "envify": "~1.2.1",
     "react": "~0.10.0",
-    "playlists-youtube": "~0.5.0",
-    "playlists-soundcloud": "~0.5.0",
-    "playlists-lastfm": "~0.5.0",
-    "playlists": "~0.5.0",
+    "playlists": "~0.6.3",
     "lodash": "~2.4.1",
     "react-ladda": "~0.2.0"
   },

@@ -22,12 +22,10 @@ var Application = React.createClass({
    searchLovedTracks: function(user) {
       var that = this;
       var playlists = require("playlists");
-      var lastfm = require('playlists-lastfm');
-      var youtube = require('playlists-youtube');
-      var soundcloud = require('playlists-soundcloud');
       window.youtube_callbacks ={};
       window.soundcloud_callbacks ={};
       window.lastfm_callbacks ={};
+      window.deezer_callbacks ={};
       that.setState({
               user: null,
               message: null,
@@ -35,10 +33,11 @@ var Application = React.createClass({
               fetchingLastfmLovedTracks: true
           });
 
-      var mylastfm = playlists.makeMusicService(lastfm, {key: '1e049e903004205189901533570d81b1', callbacks_store_name: 'lastfm_callbacks', user: user});
+      var mylastfm = playlists.makeMusicService("lastfm", {key: '1e049e903004205189901533570d81b1', callbacks_store_name: 'lastfm_callbacks', user: user});
       var musicServices = [
-          playlists.makeMusicService(youtube, {key: 'AIzaSyB1OG8q7t-tuVYfL6qVw9GZ-cvjO56X2j0', callbacks_store_name: 'youtube_callbacks'}),
-          playlists.makeMusicService(soundcloud, {key: 'TiNg2DRYhBnp01DA3zNag', callbacks_store_name: 'soundcloud_callbacks'})
+          playlists.makeMusicService("youtube", {key: 'AIzaSyB1OG8q7t-tuVYfL6qVw9GZ-cvjO56X2j0', callbacks_store_name: 'youtube_callbacks'}),
+          playlists.makeMusicService("deezer", {callbacks_store_name: 'deezer_callbacks'}),
+          playlists.makeMusicService("soundcloud", {key: 'TiNg2DRYhBnp01DA3zNag', callbacks_store_name: 'soundcloud_callbacks'})
       ];
 
       mylastfm.getLovedTracks().then(function(lastfm_loved_tracks){
@@ -81,8 +80,8 @@ var Application = React.createClass({
             <div className="input-group">
             <input ref="input" type="text" className="form-control" placeholder="LastFM user name" />
                 <span className="input-group-btn">
-                <LaddaButton active={this.state.fetchingLastfmLovedTracks} color="blue" style="expand-right">
-                    <button type="submit" className="btn btn-default" id="btnSaveNewInterest">Search loved tracks</button>
+                <LaddaButton active={this.state.fetchingLastfmLovedTracks} style="expand-right">
+                    <button type="submit" className="btn btn-default" id="btnSaveNewInterest">Fetch loved tracks</button>
                 </LaddaButton>
                 </span>
             </div>
@@ -132,7 +131,9 @@ var SongsItem = React.createClass({
       return (
           <tr key={this.props.key}>
           <td>{this.props.song.name} ({this.props.song.artist})</td>
+            <td><RecordInstance servicename='lastfm' record={this.props.song}/></td>
             <td><RecordInstance servicename='youtube' record={this.props.song.youtube}/></td>
+            <td><RecordInstance servicename='deezer' record={this.props.song.deezer}/></td>
             <td><RecordInstance servicename='soundcloud' record={this.props.song.soundcloud}/></td>
           </tr>
       );
@@ -144,8 +145,6 @@ var RecordInstance = React.createClass({
   render: function(){
       if (this.props.record === undefined){
           //Searching
-//          return (<img src='assets/spinner.png' />);
-//          return (<span className="glyphicon glyphicon-refresh"></span>);
           return (<span className="glyphicon spin glyphicon-refresh"></span>);
       }
       if (this.props.record === false){
